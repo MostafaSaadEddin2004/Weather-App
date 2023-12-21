@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather/HomePage.dart';
 import 'package:weather/Services/WeatherServices.dart';
 import 'package:weather/bloc/cubit/weather_cubit.dart';
+import 'package:weather/screens/HomePage.dart';
 
 void main() {
   runApp(BlocProvider(
@@ -30,7 +30,7 @@ class Main extends StatelessWidget {
                     .getColor()),
       ),
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
