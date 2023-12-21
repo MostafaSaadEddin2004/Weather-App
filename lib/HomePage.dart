@@ -5,9 +5,16 @@ import 'package:weather/SearchPage.dart';
 import 'package:weather/bloc/cubit/weather_cubit.dart';
 import 'package:weather/components/Loading.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   WeatherModel? weatherData;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
