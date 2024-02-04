@@ -145,7 +145,7 @@ class WeatherModel {
     } else if (conditionText == 'Patchy snow possible') {
       return Colors.blueGrey;
     } else if (conditionText == 'Patchy sleet possible') {
-      return Colors.blue;
+      return Colors.blueGrey;
     } else if (conditionText == 'Patchy freezing drizzle possible') {
       return Colors.blue;
     } else if (conditionText == 'Thundery outbreaks possible') {

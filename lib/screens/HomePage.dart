@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
             return Center(
               child: Container(
                 margin: const EdgeInsets.all(20),
-                child: const Text(
+                child: const Text(textAlign: TextAlign.center,
                   'There is no weather, search a country weather.',
                   style: TextStyle(fontSize: 24),
                 ),
