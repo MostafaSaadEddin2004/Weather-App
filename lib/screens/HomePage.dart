@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather/Models/WeatherModel.dart';
 import 'package:weather/bloc/cubit/weather_cubit.dart';
@@ -17,58 +18,66 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          title: const Text('Weather App'),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const SearchPage();
-                  }));
-                },
-                icon: const Icon(Icons.search)),
-          ],
-        ),
-        body:
-            BlocBuilder<WeatherCubit, WeatherState>(builder: ((context, state) {
-          if (state is WeatherLoading) {
-            return const Loading();
-          } else if (state is WeatherFetched) {
-            weatherData = BlocProvider.of<WeatherCubit>(context).weatherData;
-            return FetchedDataBody(weatherData: weatherData!);
-          } else if (state is WeatherFailure) {
-            return AlertDialog(
-              title: const Text('Warning'),
+    return BlocBuilder<WeatherCubit, WeatherState>(
+      builder: (context, state) {
+        final weatherPageColor = context.read<WeatherCubit>().weatherData;
+        return Scaffold(
+            appBar: AppBar(
+              backgroundColor: weatherPageColor == null
+                  ? Colors.blue
+                  : weatherPageColor.getColor(),
+              title: const Text('Weather'),
               actions: [
-                Column(children: [
-                  const Text('Something went wrong, please try again.'),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const SearchPage(),
-                        ));
-                      },
-                      child: const Text('Try again'))
-                ]),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const SearchPage();
+                      }));
+                    },
+                    icon: const Icon(Icons.search)),
               ],
-            );
-          } else {
-            return Center(
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                child: const Text(textAlign: TextAlign.center,
-                  'There is no weather, search a country weather.',
-                  style: TextStyle(fontSize: 24),
-                ),
-              ),
-            );
-          }
-        })));
+            ),
+            body: Builder(builder: ((context) {
+              if (state is WeatherLoading) {
+                return const Loading();
+              } else if (state is WeatherFetched) {
+                final weatherData = context.read<WeatherCubit>().weatherData;
+                return FetchedDataBody(weatherData: weatherData!);
+              } else if (state is WeatherFailure) {
+                return AlertDialog(
+                  title: const Text('Warning'),
+                  actions: [
+                    Column(children: [
+                       Text(state.errorMessage),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const SearchPage(),
+                            ));
+                          },
+                          child: const Text('Try again'))
+                    ]),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
+                    child: const Text(
+                      textAlign: TextAlign.center,
+                      'There is no weather.',
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                  ),
+                );
+              }
+            })));
+      },
+    );
   }
 }
 
@@ -89,25 +98,39 @@ class FetchedDataBody extends StatelessWidget {
         weatherData.getColor()[300]!,
         weatherData.getColor()[100]!,
       ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Spacer(
-          flex: 3,
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        const Spacer(
+          flex: 1,
         ),
         Text(
-          '${weatherData.locName}',
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          weatherData.locName,
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 24,
         ),
         Text(
-          'Updated at:  ${weatherData.date}',
-          style: TextStyle(fontSize: 24),
+          'Update date:  ${weatherData.date.substring(0, 10)}',
+          style: const TextStyle(
+            fontSize: 16,
+          ),
         ),
-        Spacer(
+        const SizedBox(
+          height: 8,
+        ),
+        Text(
+          'Update Time:  ${weatherData.date.substring(11, 16)}',
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
+        const Spacer(
           flex: 1,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
+            SizedBox(
                 height: 100,
                 width: 100,
                 child: Image.asset(
@@ -115,31 +138,31 @@ class FetchedDataBody extends StatelessWidget {
                   fit: BoxFit.cover,
                 )),
             Text(
-              '${weatherData.temp.toInt().toString()}',
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+              weatherData.temp.toInt().toString(),
+              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
             Column(
               children: [
                 Text(
                   'maxTemp : ${weatherData.maxTemp.toInt()}',
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
                 Text(
                   'minTemp : ${weatherData.minTemp.toInt()}',
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(fontSize: 20),
                 ),
               ],
             ),
           ],
         ),
-        Spacer(
+        const Spacer(
           flex: 1,
         ),
         Text(
-          '${weatherData.conditionText}',
-          style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          weatherData.conditionText,
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
         ),
-        Spacer(
+        const Spacer(
           flex: 8,
         )
       ]),

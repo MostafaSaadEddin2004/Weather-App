@@ -17,24 +17,23 @@ class Main extends StatelessWidget {
       create: (context) {
         return WeatherCubit(weatherService: WeatherService());
       },
-      child: Builder(
-        builder: (context) {
-          final weatherData = context.read<WeatherCubit>()
-                              .weatherData;
-          return MaterialApp(
-            theme: ThemeData(
-              colorScheme: ColorScheme.light(
-                  primary: weatherData ==
-                          null
+      child: Builder(builder: (context) {
+        final weatherData = context.read<WeatherCubit>().weatherData;
+        return MaterialApp(
+          theme: ThemeData(
+              appBarTheme: AppBarTheme(
+                  backgroundColor: weatherData == null
                       ? Colors.blue
-                      : weatherData
-                          .getColor()),
-            ),
-            debugShowCheckedModeBanner: false,
-            home: const HomePage(),
-          );
-        }
-      ),
+                      : weatherData.getColor(),
+                  actionsIconTheme: const IconThemeData(color: Colors.white),
+                  iconTheme: const IconThemeData(color: Colors.white),
+                  titleTextStyle:
+                      const TextStyle(color: Colors.white, fontSize: 20)),
+              ),
+          debugShowCheckedModeBanner: false,
+          home: const HomePage(),
+        );
+      }),
     );
   }
 }

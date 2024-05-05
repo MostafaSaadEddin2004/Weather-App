@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:weather/Models/WeatherModel.dart';
 import 'package:weather/Services/WeatherServices.dart';
@@ -16,7 +17,7 @@ class WeatherCubit extends Cubit<WeatherState> {
       emit(WeatherFetched(weatherData: weatherData!));
     } on Exception catch (e) {
       print(e);
-      emit(WeatherFailure());
+      emit(WeatherFailure(errorMessage: e.toString()));
     }
   }
 }

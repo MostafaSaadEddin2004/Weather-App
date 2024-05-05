@@ -13,4 +13,8 @@ class WeatherFetched extends WeatherState {
   WeatherFetched({required this.weatherData});
 }
 
-class WeatherFailure extends WeatherState {}
+class WeatherFailure extends WeatherState {
+  final String errorMessage;
+
+  WeatherFailure({required this.errorMessage});
+}
